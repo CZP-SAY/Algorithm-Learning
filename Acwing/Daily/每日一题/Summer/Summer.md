@@ -808,3 +808,354 @@ int main()
 }
 ```
 
+
+
+
+
+
+
+
+
+### 4276:删除C
+
+
+
+#### 题目
+
+
+
+​	当你被面试官要求用 CC 写一个 `Hello World` 时，有本事像下图显示的那样写一个出来吗？
+
+![ba3b8678-061d-4fc6-a87e-ce08e1434410.jpg](https://cdn.acwing.com/media/article/image/2022/01/10/19_0b2aaf6771-ba3b8678-061d-4fc6-a87e-ce08e1434410.jpg)
+
+
+
+输入格式
+
+​	输入首先给出 2626 个英文大写字母 A−ZA−Z，每个字母用一个 7×57×5 的、由 `C` 和 `.` 组成的矩阵构成。
+
+​	最后在一行中给出一个句子，以回车结束。句子是由若干个单词（每个包含不超过 10 个连续的大写英文字母）组成的，单词间以任何非大写英文字母分隔。
+
+​	题目保证至少给出一个单词。
+
+输出格式
+
+​	对每个单词，将其每个字母用矩阵形式在一行中输出，字母间有一列空格分隔。单词的首尾不得有多余空格。
+
+​	相邻的两个单词间必须有一空行分隔。输出的首尾不得有多余空行。
+
+
+
+数据范围
+
+​	最后一行句子的总长度范围 \[1,5000]，
+​	给出的单词数量范围 \[1,300]。
+
+
+
+输入样例：(前面输入的就是ABCD...)
+
+```
+..C..
+.C.C.
+C...C
+CCCCC
+C...C
+C...C
+C...C
+CCCC.
+C...C
+C...C
+CCCC.
+C...C
+C...C
+CCCC.
+.CCC.
+C...C
+C....
+C....
+C....
+C...C
+.CCC.
+CCCC.
+C...C
+C...C
+C...C
+C...C
+C...C
+CCCC.
+CCCCC
+C....
+C....
+CCCC.
+C....
+C....
+CCCCC
+CCCCC
+C....
+C....
+CCCC.
+C....
+C....
+C....
+CCCC.
+C...C
+C....
+C.CCC
+C...C
+C...C
+CCCC.
+C...C
+C...C
+C...C
+CCCCC
+C...C
+C...C
+C...C
+CCCCC
+..C..
+..C..
+..C..
+..C..
+..C..
+CCCCC
+CCCCC
+....C
+....C
+....C
+....C
+C...C
+.CCC.
+C...C
+C..C.
+C.C..
+CC...
+C.C..
+C..C.
+C...C
+C....
+C....
+C....
+C....
+C....
+C....
+CCCCC
+C...C
+C...C
+CC.CC
+C.C.C
+C...C
+C...C
+C...C
+C...C
+C...C
+CC..C
+C.C.C
+C..CC
+C...C
+C...C
+.CCC.
+C...C
+C...C
+C...C
+C...C
+C...C
+.CCC.
+CCCC.
+C...C
+C...C
+CCCC.
+C....
+C....
+C....
+.CCC.
+C...C
+C...C
+C...C
+C.C.C
+C..CC
+.CCC.
+CCCC.
+C...C
+CCCC.
+CC...
+C.C..
+C..C.
+C...C
+.CCC.
+C...C
+C....
+.CCC.
+....C
+C...C
+.CCC.
+CCCCC
+..C..
+..C..
+..C..
+..C..
+..C..
+..C..
+C...C
+C...C
+C...C
+C...C
+C...C
+C...C
+.CCC.
+C...C
+C...C
+C...C
+C...C
+C...C
+.C.C.
+..C..
+C...C
+C...C
+C...C
+C.C.C
+CC.CC
+C...C
+C...C
+C...C
+C...C
+.C.C.
+..C..
+.C.C.
+C...C
+C...C
+C...C
+C...C
+.C.C.
+..C..
+..C..
+..C..
+..C..
+CCCCC
+....C
+...C.
+..C..
+.C...
+C....
+CCCCC
+HELLO~WORLD!
+```
+
+输出样例：
+
+```
+C...C CCCCC C.... C.... .CCC.
+C...C C.... C.... C.... C...C
+C...C C.... C.... C.... C...C
+CCCCC CCCC. C.... C.... C...C
+C...C C.... C.... C.... C...C
+C...C C.... C.... C.... C...C
+C...C CCCCC CCCCC CCCCC .CCC.
+
+C...C .CCC. CCCC. C.... CCCC.
+C...C C...C C...C C.... C...C
+C...C C...C CCCC. C.... C...C
+C.C.C C...C CC... C.... C...C
+CC.CC C...C C.C.. C.... C...C
+C...C C...C C..C. C.... C...C
+C...C .CCC. C...C CCCCC CCCC.
+```
+
+
+
+
+
+#### 思路
+
+一道模拟题~(真ex,有许多小细节
+
+[对应不同题意的输入格式](https://blog.csdn.net/qq_46009744/article/details/121705608?spm=1001.2014.3001.5502)
+
+题目说是输出出现的单词,然后换行,再输出下一个单词.所以把当出现一个完整单词的时候,我们就把它存储进字符串,然后一个一个字母输出.再输出下一个单词.
+
+前提是先储存好题目给你的每一个字母的矩阵表达。g\[t]\[x][y]:t表示哪一个字母,1代表A,2代表B x和y就用来存储这个字母的矩阵形式.
+
+​	要用getchar读入字符串,防止cin过滤掉空格(getchar也可以读入换行)
+
+```c++
+    while ((c = getchar()) != EOF) //也可以写成(c = getchar()) != EOF && c!='\n'),不能用cin和scanf,会过滤空格 .当然!=EOF和!=-1是同一个意思
+    
+        //利用while不断读入字符,但为了防止它无休止的读下去,加上!=EOF.它是文本结束符,在自己终端这用ctrl+z表示
+     {
+          if (c >= 'A' && c <= 'Z')
+               word += c;
+          else
+          {
+               output(word);
+               word = "";
+          }
+     }
+```
+
+[粗略讲解EOF用法](https://blog.csdn.net/henu1710252658/article/details83040281)
+
+
+
+#### 代码
+
+```c++
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+char g[26][7][6];
+bool is_first = true;
+string word; //存储每个单词,当出现一整个单词的时候,就把他输出
+void output(string word)
+{
+     if (word.empty())
+          return;
+
+     if (is_first)
+          is_first = false;
+     else
+          cout << endl;
+
+     char str[7][60] = {0};
+     for (int i = 0; i < word.size(); i++)
+          for (int j = 0; j < 7; j++)
+               for (int k = 0; k < 5; k++)
+                    str[j][i * 6 + k] = g[word[i] - 'A'][j][k];
+
+     for (int i = 1; i < word.size(); i++) //中间夹着一行空格
+          for (int j = 0; j < 7; j++)
+               str[j][i * 6 - 1] = ' ';
+
+     for (int i = 0; i < 7; i++)
+          cout << str[i] << endl;
+}
+
+int main()
+{
+     for (int i = 0; i < 26; i++) //把每个字符的格式存储起来
+          for (int j = 0; j < 7; j++)
+               cin >> g[i][j];
+
+     string word;
+     char c;
+     // getchar(); 如果这里加上getchar,会清除掉上面cin遗留在缓冲区的换行
+     while ((c = getchar()) != EOF) //也可以写成(c = getchar()) != EOF && c!='\n'),不能用cin和scanf,会过滤空格
+     //利用while不断读入字符,但为了防止它无休止的读下去,加上!=EOF.它是文本结束符.而在自己终端要表示出EOF可以键入ctrl+z,再换行
+     {
+          if (c >= 'A' && c <= 'Z')
+               word += c;
+          else
+          {
+               output(word);
+               word = "";
+          }
+     }
+
+     output(word);
+
+     return 0;
+}
+```
+
