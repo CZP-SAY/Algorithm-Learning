@@ -1159,3 +1159,624 @@ int main()
 }
 ```
 
+
+
+### 4278:峰会
+
+#### 题目
+
+
+
+峰会是国家元首或政府首脑的会议。
+
+为峰会安排休息区可不是一件简单的工作。
+
+一共有 N个首脑参加峰会，编号 1∼N。
+
+这些首脑之间存在 MM 对两两之间的直接朋友关系。
+
+在划分区域时，我们希望被安排在同一休息区域的首脑们满足，任意两人之间都是直接朋友关系。
+
+现在，给定 K 个关于划分休息区域的安排，请你依次判断每个安排是否合理。
+
+
+
+输入格式
+
+第一行包含两个整数 N 和 M。
+
+接下来 M 行，每行包含两个整数 a,b，表示首脑 a 和首脑 b 之间存在直接朋友关系。
+
+再一行包含整数 K。
+
+接下来 K 行，每行描述一个区域安排，首先包含一个整数 L，表示该安排打算将 L 个首脑安排在同一区域休息，然后包含 L 个整数，表示这些首脑的编号。
+
+输出格式
+
+共 K 行，第 i 行输出对第 i 个安排的判断，具体格式为
+
+- 如果安排满足其中的任意两人之间都是直接朋友关系并且不存在额外的人与被安排的所有人都是直接朋友关系（即无法安排更多的人在这一区域休息），则输出 `Area X is OK.`
+- 如果安排满足其中的任意两人之间都是直接朋友关系并且存在额外的人与被安排的所有人都是直接朋友关系（即可以安排更多的人在这一区域休息），则输出 `Area X may invite more people, such as H.`，其中 `H` 是额外可被安排的人的编号（如果不唯一，则输出最小的那个）。
+- 如果安排无法满足其中的任意两人之间都是直接朋友关系，则输出 `Area X needs help.`。
+
+`X` 表示组别编号，从 1 到 K。
+
+
+
+数据范围
+
+1≤N≤200,
+1≤M≤(N(N−1))/2,
+1≤a,b≤N,
+a≠b,
+1≤K≤100,
+1≤L≤N,
+同一对直接朋友关系不会在输入中重复出现。
+
+
+
+输入样例：
+
+```
+8 10
+5 6
+7 8
+6 4
+3 6
+4 5
+2 3
+8 2
+2 7
+5 3
+3 4
+6
+4 5 4 3 6
+3 2 8 7
+2 2 3
+1 1
+2 4 6
+3 3 2 1
+```
+
+输出样例：
+
+```
+Area 1 is OK.
+Area 2 is OK.
+Area 3 is OK.
+Area 4 is OK.
+Area 5 may invite more people, such as 3.
+Area 6 needs help.
+```
+
+
+
+#### 思路
+
+Orz
+
+看到是小数据,就采用暴力枚举
+
+```c++
+任意两个的关系
+/*
+for (int i = 1; i <= n; i++)
+     for (int j = i + 1; j <= n; j++)
+*/
+    
+/*
+for (int i = 1; i <= n; i++)
+     for (int j = 1; j <= n; j++)
+*/
+    
+```
+
+时间复杂度:O(n^2^k)
+
+但有一些小细节(要增强写代码能力)
+
+
+
+#### 代码
+
+```c++
+//任意两个的关系
+/*
+for (int i = 1; i <= n; i++)
+     for (int j = i + 1; j <= n; j++)
+*/
+//数据小:暴力枚举
+
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 210;
+
+int n, m;
+bool g[N][N];
+bool st[N];
+
+int main()
+{
+     scanf("%d%d", &n, &m);
+     while (m--)
+     {
+          int a, b;
+          scanf("%d%d", &a, &b);
+          g[a][b] = g[b][a] = true;
+     }
+
+     scanf("%d", &m);
+     for (int T = 1; T <= m; T++)
+     {
+          int cnt;
+          scanf("%d", &cnt);
+          memset(st, 0, sizeof st);
+          while (cnt--)
+          {
+               int x;
+               scanf("%d", &x);
+               st[x] = true;
+          }
+
+          bool is_clique = true;
+          for (int i = 1; i <= n; i++)
+               for (int j = i + 1; j <= n; j++)
+                    if (st[i] && st[j] && !g[i][j])
+                         is_clique = false;
+          if (!is_clique)
+               printf("Area %d needs help.\n", T);
+          else
+          {
+               int id = 0;
+               for (int i = 1; i <= n; i++)
+                    if (!st[i]) // i要不存在
+                    {
+                         bool all = true;
+                         for (int j = 1; j <= n; j++) //这里就不是j=i+1了
+                              if (st[j] && !g[i][j])
+                              {
+                                   all = false;
+                                   break;
+                              }
+                         if (all)
+                         {
+                              id = i;
+                              break;
+                         }
+                    }
+               if (id)
+                    printf("Area %d may invite more people, such as %d.\n", T, id);
+               else
+                    printf("Area %d is OK.\n", T);
+          }
+     }
+
+     return 0;
+}
+
+```
+
+
+
+
+
+
+
+
+
+### 4279:笛卡尔树
+
+#### 题目
+
+[笛卡尔树](https://baike.baidu.com/item/笛卡尔树/7579802?fr=aladdin) 是由一系列不同数字构成的二叉树。
+
+树满足堆的性质，中序遍历返回原始序列。
+最小笛卡尔树表示满足小根堆性质的笛卡尔树。
+
+例如，给定序列 {8,15,3,4,1,5,12,10,18,6}则生成的最小堆笛卡尔树如图所示。
+
+![6a99f68a-6578-46e0-9232-fbf0adf3691f.jpg](https://cdn.acwing.com/media/article/image/2022/01/11/19_e5d5fcaf72-6a99f68a-6578-46e0-9232-fbf0adf3691f.jpg)
+
+现在，给定一个长度为 N 的原始序列，请你生成最小堆笛卡尔树，并输出其层序遍历序列。
+
+
+
+输入格式
+
+第一行包含整数 N。
+
+第二行包含 N 个两两不同的整数，表示原始序列。
+
+输出格式
+
+共一行，输出最小堆笛卡尔树的层序遍历序列。
+
+
+
+数据范围
+
+1≤N≤30,
+原始序列中元素的取值范围 \[−2147483648,2147483647]。
+
+
+
+输入样例：
+
+```
+10
+8 15 3 4 1 5 12 10 18 6
+```
+
+输出样例：
+
+```
+1 3 5 8 4 6 15 10 12 18
+```
+
+
+
+#### 思路
+
+​	只已知中序遍历,我们是无法确定一棵树的,因为可以选任何一个点当root.(要知道中序+后序,中序+前序才能构建),而本题还给了你一个要求,构建最小笛卡尔树(小根堆性质:root小于子节点),这样我们才能确定一棵树:
+
+​	找到序列最小的数字，作为分割点，它左边的作为左儿子，它右边的作为右儿子,递归下去.
+
+​	一般要建树,可能要构造数据结构(采用指针):
+
+```c++
+typedef struct TreeNode {
+    int data;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    struct TreeNode *parent;
+} TreeNode;
+
+void middle_order(TreeNode *Node) {
+    if(Node != NULL) {
+        middle_order(Node->left);
+        printf("%d ", Node->data);
+        middle_order(Node->right);
+    }
+}
+```
+
+​	但其实也可以采用数组构建,写的方便一点:
+
+```c++
+
+struct Node {
+    int l;
+    int r;
+    int data;
+};
+Node tree[N];
+```
+
+
+
+
+先用 dfs 建树，然后用 bfs 输出答案
+
+时间复杂度:
+无论 dfs 还是 bfs 每个点都只遍历一次，所以时间复杂度 O(n)。
+
+空间复杂度:
+dfs 的空间复杂度是树的深度，最多为 O(n)，bfs 的空间复杂度最多是节点数也就是 O(n)，总的空间复杂度就是 O(n)。
+
+​	
+
+#### 代码
+
+```c++
+//模仿y总
+#include <bits/stdc++.h>
+using namespace std;
+const int INF = 2147483647;
+const int N = 15;
+int w[N];
+vector<int> v[N];
+int f = 0;
+void dfs(int l, int r, int d)//还有一个层数参数
+{
+     if (r < l) //!注意
+          return;
+     if (d > f)
+          f = d;
+     int minv = INF;
+     int idx;
+     for (int i = l; i <= r; i++)
+     {
+          if (w[i] < minv)
+          {
+               minv = w[i];
+               idx = i;
+          }
+     }
+     v[d].push_back(minv);
+     dfs(l, idx - 1, d + 1);
+     dfs(idx + 1, r, d + 1);
+}
+
+int main()
+{
+     int n;
+     cin >> n;
+     for (int i = 1; i <= n; i++)
+          cin >> w[i];
+     dfs(1, n, 1);
+     for (int i = 1; i <= f; i++)
+          for (auto x : v[i])
+               cout << x << ' ';
+}
+```
+
+
+
+```c++
+//dfs+bfs,wp
+
+#include <iostream>
+#include <queue> // bfs要用
+using namespace std;
+
+const int N = 35;
+
+int n;
+int s[N]; // 原始序列
+
+struct Node
+{
+     int l, r, dat;
+} tree[N]; // 笛卡尔树
+int cnt;   // 树的长度，便于加入元素
+
+int dfs(int l, int r) // 建s[l] ~ s[r]的笛卡尔树，返回根节点
+{
+     if (l >= r)
+          return -1; // 如果区间不合法返回-1
+
+     int minv = 2147483647, idx;     // minv: s[l] ~ s[r]中最小的数，idx: 它的编号
+     for (int i = l; i < r; i++)     // 遍历s[l] ~ s[r]
+          if (minv >= s[i])          // 如果能更新
+               minv = s[i], idx = i; // 更新
+
+     int tmp = cnt; // 根节点编号需要保存一下，因为往深层递归的时候可能会改动cnt
+
+     tree[cnt++] = {dfs(l, idx), dfs(idx + 1, r), minv}; // 往深层递归
+
+     return tmp; // 返回根节点编号
+}
+
+void bfs() // 输出最小堆笛卡尔树的层序遍历序列
+{
+     queue<int> q; // bfs要用的队列
+     q.push(0);    // 把根节点加入队列（因为根节点是最先遍历的，所以它的编号总是0
+
+     while (!q.empty()) // 还能扩展
+     {
+          int t = q.front();          // 要扩展的点
+          cout << tree[t].dat << ' '; // 输出
+          q.pop();                    // 出队
+
+          if (~tree[t].l)
+               q.push(tree[t].l); // 如果左儿子非空则加入队列
+          if (~tree[t].r)
+               q.push(tree[t].r); // 同理
+     }
+}
+
+int main()
+{
+     cin >> n;
+     for (int i = 0; i < n; i++)
+          cin >> s[i]; // 输入原始序列
+
+     dfs(0, n); // dfs
+     bfs();     // bfs
+
+     return 0;
+}
+```
+
+
+
+
+
+
+
+### 691:立方体IV
+
+
+
+
+
+#### 思路
+
+​	忘了,Orz
+
+​	从题干可以看出,走过的格子绝对不会再走第二遍,可以想到记忆化搜索
+
+​	时间复杂度n^2^.
+
+​	本题类似题目:滑雪,dfs类似返还:子树大小,
+
+
+
+​	读入每个点的数值后，dfs每一个点最多能到达的房间数量。
+​	dfs时，如果f值非空（即dfs前面的点时，已经遍历过该点），可直接返回该点的f值，以免重复搜索该点。
+​	否则，先赋初值1（即该房间）。然后依次遍历4个方向，如果到达的点的g值比出发点大1，则dfs该点，同时该点取dfs返回值+1与原先的点的最大值
+最后根据要求依次遍历每个点即可找到最大值。
+
+​	详细的记忆化搜索讲解可以查看 [901. 滑雪 - AcWing题库](https://www.acwing.com/problem/content/903/)
+
+
+
+#### 代码
+
+```c++
+//dfs+记忆化搜索
+//f[i][j]:存储以这个点为起点,最长走过几个房间
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <deque>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+const int MAXN = 1005;
+const int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+
+int n;
+int g[MAXN][MAXN], f[MAXN][MAXN];
+
+bool check(int x, int y)
+{
+     if (x < 0 || x >= n || y < 0 || y >= n)
+          return false;
+     return true;
+}
+
+int dfs(int x, int y) // int,类似返还子树大小
+{
+     if (f[x][y])
+          return f[x][y];
+     f[x][y] = 1; //初始化
+     for (int i = 0; i < 4; i++)
+     {
+          int xx = x + dx[i], yy = y + dy[i];
+          if (check(xx, yy) && g[xx][yy] == g[x][y] + 1)
+               f[x][y] = f[x][y] + dfs(xx, yy); //子树大小
+         		//f[x][y]=max(f[x][y],dfs(xx,yy)+1)
+     }
+     return f[x][y];
+}
+
+/*
+
+int dfs(int x, int y, int sum)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        int nx = x + dx[i], ny = y + dy[i];
+        if (nx < 1 || nx > n || ny < 1 || ny > n) continue;
+        if (g[nx][ny] != g[x][y] - 1) continue;
+
+        return dfs(nx, ny, sum + 1);
+    }
+
+    if (maxn <= sum)
+    {
+        ans = g[x][y];
+        maxn = sum;
+    }
+
+    return sum;
+}
+*/
+
+int main()
+{
+     int T;
+     scanf("%d", &T);
+     for (int t = 1; t <= T; t++)
+     {
+          scanf("%d", &n);
+          for (int i = 0; i < n; i++)
+               for (int j = 0; j < n; j++)
+                    scanf("%d", &g[i][j]);
+          memset(f, 0, sizeof f);
+          for (int i = 0; i < n; i++)
+               for (int j = 0; j < n; j++)
+                    dfs(i, j);
+          int res = 0, id = n * n;
+          for (int i = 0; i < n; i++)
+               for (int j = 0; j < n; j++)
+                    if (f[i][j] > res || f[i][j] == res && g[i][j] < id)
+                    {
+                         res = f[i][j];
+                         id = g[i][j];
+                    }
+          printf("Case #%d: %d %d\n", t, id, res);
+     }
+     return 0;
+}
+
+```
+
+
+
+
+
+### 3311:算数长度
+
+
+
+
+
+#### 思路
+
+简单的双指针题目,O(n)时间复杂度
+
+双指针大多用到for+while
+
+刚开始还是看了一眼标程,感觉要是自己写,结果可能就变成了判断a[i]等不等于a[j]了hhhh,j动一下i动一下,会被绕进去,而不是直接清爽的写出`a[j] - a[j - 1] == a[j - 1] - a[j - 2]`
+
+
+
+#### 代码
+
+```c++
+
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 2e5 + 10;
+int a[N];
+int main()
+{
+     int t;
+     cin >> t;
+     for (int e = 1; e <= t; e++)
+     {
+          int n;
+          cin >> n;
+          for (int i = 1; i <= n; i++)
+               cin >> a[i];
+          int maxx = 0;
+          for (int i = 1; i <= n; i++)
+          {
+               int j = i + 2; //此时初始最长算数长度为:2(j-i)
+               while (j <= n)
+               {
+                    if (a[j] - a[j - 1] == a[j - 1] - a[j - 2])//直接两段一起比
+                         j++;
+                    else
+                         break;
+               }
+               if (j - i >= maxx)
+               {
+                    maxx = j - i;
+               }
+               i = j - 2;
+          }
+          printf("Case #%d: %d\n", e, maxx);
+     }
+}
+```
+
