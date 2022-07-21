@@ -1724,7 +1724,7 @@ int main()
 
 
 
-### 3311:算数长度
+### 3311:最长算数
 
 
 
@@ -1776,6 +1776,73 @@ int main()
                i = j - 2;
           }
           printf("Case #%d: %d\n", e, maxx);
+     }
+}
+```
+
+
+
+
+
+
+
+### 行程排序
+
+
+
+#### 思路
+
+​	先建立(哈希表)每一张机票的起点和终点的映射关系,然后找到最初的起点,最后直接一条连着一条输出就可以了
+
+​	小模拟
+
+
+
+#### 代码
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1e4 + 10;
+
+string b[N];
+int main()
+{
+
+     int t;
+     cin >> t;
+     for (int x = 0; x < t; x++)
+     {
+          map<string, int> s, e;
+          map<string, string> a;
+          int n;
+          cin >> n;
+          for (int i = 0; i < n; i++)
+          {
+               string s1, s2;
+               cin >> s1 >> s2;
+               b[i] = s1;     
+               a[s1] = s2; //把一张机票的起点和终点映射起来
+               e[s2]++;    //找最初的起点
+          }
+          printf("Case #%d: ", x + 1);
+          string start1;
+          int j = 0;
+          for (int i = 0; i < n; i++)
+          {
+               if (e[b[i]] == 0)
+               {
+                    start1 = b[i];
+                    while (j < n) //找到起点后直接输出答案
+                    {
+                         cout << start1 << '-' << a[start1] << ' ';
+                         start1 = a[start1];
+                         j++;
+                    }
+                    break;
+               }
+          }
+          cout << endl;
      }
 }
 ```
